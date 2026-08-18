@@ -1,5 +1,7 @@
 # DSH 侧栏插件管理器
 
+中文 | [English](README.en.md)
+
 `dsh-plugin-sidebar-manager` 是一个独立安装的 DSH Web 插件。它在左侧栏底部增加“插件”按钮，提供当前 Loader 插件清单、分类搜索和运行时启停。
 
 ## 界面预览
@@ -26,7 +28,7 @@
 ### 环境要求
 
 - 已安装 DeepSeek Harness，`dsh web` 可以正常启动。
-- 使用 DSH `0.1.0-rc.5`。
+- 使用 DSH `0.1.0-rc.7`。
 - 插件必须安装到 `web` profile。
 
 ### 从仓库目录安装（推荐）
@@ -103,7 +105,7 @@ dsh plugin --profile web remove dsh-plugin-sidebar-manager
 
 ## 兼容性
 
-当前源码和安装包面向 DSH `0.1.0-rc.5`。它依赖该版本提供的：
+当前源码和安装包面向 DSH `0.1.0-rc.7`。它依赖该版本提供的：
 
 - `pluginInventory` Remote
 - `sidebar.footer.action` 列表 slot
