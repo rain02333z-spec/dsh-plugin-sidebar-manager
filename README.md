@@ -35,9 +35,8 @@ Set-Location dsh-plugin-sidebar-manager
 # 2. 准备本地安装包
 node scripts/prepare-checkout.mjs
 
-# 3. 链接进 web profile
-$plugin = (Resolve-Path './packages/dsh-plugin-sidebar-manager').Path
-dsh plugin --profile web add "link:$plugin"
+# 3. 安装到 web profile
+dsh plugin --profile web add ./packages/dsh-plugin-sidebar-manager
 
 # 4. 重启 DSH Web
 dsh web
