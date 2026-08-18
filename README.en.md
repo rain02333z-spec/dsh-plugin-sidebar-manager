@@ -32,7 +32,7 @@ You need DSH `0.1.0-rc.7` and pnpm. Run these commands in order:
 ```powershell
 # 1. Clone the repository
 git clone https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager.git
-Set-Location dsh-plugin-sidebar-manager
+cd dsh-plugin-sidebar-manager
 
 # 2. Prepare the local package
 node scripts/prepare-checkout.mjs

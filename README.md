@@ -32,7 +32,7 @@
 ```powershell
 # 1. 克隆仓库
 git clone https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager.git
-Set-Location dsh-plugin-sidebar-manager
+cd dsh-plugin-sidebar-manager
 
 # 2. 准备本地安装包
 node scripts/prepare-checkout.mjs
