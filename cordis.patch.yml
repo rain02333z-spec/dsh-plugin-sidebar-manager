@@ -1,0 +1,6 @@
+# dsh-plugin-manager bundle patch: insert the plugin's dual-face row into the
+# profile tree. The package declares both a host half (the pluginManager remote)
+# and a browser half (dsh.client), so one row mounts both.
+- insert:
+    - id: plugin-manager
+      name: 'dsh-plugin-sidebar-manager'
