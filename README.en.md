@@ -25,74 +25,31 @@
 
 ## Quick Start
 
-### Requirements
-
-- DeepSeek Harness is installed and `dsh web` starts successfully.
-- DSH `0.1.0-rc.7` is installed.
-- Install this plugin into the `web` profile.
-
-### Install from the repository checkout (recommended)
-
-`packages/dsh-plugin-sidebar-manager` contains prebuilt code and can be installed as a local checkout, following the same pattern as the official DSH example:
+You need DSH `0.1.0-rc.7` and pnpm. Run these commands in order:
 
 ```powershell
+# 1. Clone the repository
 git clone https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager.git
 Set-Location dsh-plugin-sidebar-manager
-pnpm --dir ./packages/dsh-plugin-sidebar-manager install --prod --no-lockfile --config.auto-install-peers=false
-dsh plugin --profile web add ./packages/dsh-plugin-sidebar-manager
-```
 
-The `pnpm` command installs only the checkout's runtime dependency. The DSH host provides the peer dependencies. `dsh plugin add` then records the local directory as a `link:` dependency in the `web` profile.
+# 2. Prepare the local package
+node scripts/prepare-checkout.mjs
 
-When you run the CLI from a DSH source checkout, resolve the plugin directory first and pass its absolute path:
-
-```powershell
+# 3. Link the plugin into the web profile
 $plugin = (Resolve-Path './packages/dsh-plugin-sidebar-manager').Path
-$dshRepo = 'C:\path\to\deepseek-harness'
-pnpm --dir $dshRepo dsh plugin --profile web add $plugin
+dsh plugin --profile web add "link:$plugin"
+
+# 4. Restart DSH Web
+dsh web
 ```
 
-Stop and restart `dsh web` after installation. Refreshing the browser alone will not load a newly installed plugin.
-
-### Install from GitHub Release
-
-If you do not need to keep a repository checkout, install the published tarball directly:
-
-```powershell
-dsh plugin --profile web add https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager/releases/download/v0.1.1/dsh-plugin-sidebar-manager-0.1.1.tgz
-```
-
-### Build from source (development)
-
-The source uses the DSH monorepo build conventions. Run these commands from the DSH repository root:
-
-```powershell
-git clone https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager.git packages/extensions/plugin-manager
-pnpm install
-pnpm exec tsc -b packages/extensions/plugin-manager/tsconfig.host.json packages/extensions/plugin-manager/tsconfig.client.json
-pnpm --filter dsh-plugin-sidebar-manager bundle
-
-$plugin = (Resolve-Path 'packages/extensions/plugin-manager').Path
-pnpm dsh plugin --profile web add $plugin
-```
-
-The profile links the source checkout. After changing the code, rebuild the types and bundle, then restart `dsh web`.
-
-### Verify and uninstall
-
-After restarting, the Plugins entry at the bottom of the sidebar confirms that the plugin loaded. You can also inspect the composed `web` profile configuration:
-
-```powershell
-dsh --profile web --dump-config
-```
+The Plugins entry at the bottom of the sidebar confirms that the plugin loaded.
 
 Uninstall the plugin with:
 
 ```powershell
 dsh plugin --profile web remove dsh-plugin-sidebar-manager
 ```
-
-Restart `dsh web` after uninstalling it.
 
 ## How It Works
 

@@ -25,74 +25,31 @@
 
 ## 快速开始
 
-### 环境要求
-
-- 已安装 DeepSeek Harness，`dsh web` 可以正常启动。
-- 使用 DSH `0.1.0-rc.7`。
-- 插件必须安装到 `web` profile。
-
-### 从仓库目录安装（推荐）
-
-仓库内的 `packages/dsh-plugin-sidebar-manager` 已包含预构建代码，可以像 DSH 官方示例中的本地 checkout 一样直接安装：
+需要 DSH `0.1.0-rc.7` 和 pnpm。按顺序执行：
 
 ```powershell
+# 1. 克隆仓库
 git clone https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager.git
 Set-Location dsh-plugin-sidebar-manager
-pnpm --dir ./packages/dsh-plugin-sidebar-manager install --prod --no-lockfile --config.auto-install-peers=false
-dsh plugin --profile web add ./packages/dsh-plugin-sidebar-manager
-```
 
-第一条 `pnpm` 命令只安装 checkout 自己的运行依赖；DSH peer dependencies 由宿主提供。之后 `dsh plugin add` 会把这个本地目录以 `link:` 形式写入 `web` profile。
+# 2. 准备本地安装包
+node scripts/prepare-checkout.mjs
 
-从 DSH 源码仓库运行 CLI 时，先取得插件目录的绝对路径：
-
-```powershell
+# 3. 链接进 web profile
 $plugin = (Resolve-Path './packages/dsh-plugin-sidebar-manager').Path
-$dshRepo = 'C:\path\to\deepseek-harness'
-pnpm --dir $dshRepo dsh plugin --profile web add $plugin
+dsh plugin --profile web add "link:$plugin"
+
+# 4. 重启 DSH Web
+dsh web
 ```
 
-安装完成后停止并重新启动 `dsh web`。只刷新浏览器不会加载新插件。
-
-### 从 GitHub Release 安装
-
-不需要保留仓库 checkout 时，可以直接安装已发布的 tarball：
-
-```powershell
-dsh plugin --profile web add https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager/releases/download/v0.1.1/dsh-plugin-sidebar-manager-0.1.1.tgz
-```
-
-### 从源码构建（开发调试）
-
-源码使用 DSH monorepo 的构建约定。从 DSH 仓库根目录执行：
-
-```powershell
-git clone https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager.git packages/extensions/plugin-manager
-pnpm install
-pnpm exec tsc -b packages/extensions/plugin-manager/tsconfig.host.json packages/extensions/plugin-manager/tsconfig.client.json
-pnpm --filter dsh-plugin-sidebar-manager bundle
-
-$plugin = (Resolve-Path 'packages/extensions/plugin-manager').Path
-pnpm dsh plugin --profile web add $plugin
-```
-
-profile 会链接这个源码 checkout。修改代码后重新执行类型构建和 bundle，再重启 `dsh web`。
-
-### 验证与卸载
-
-重启后，左侧栏底部出现“插件”入口即表示安装成功。也可以检查 `web` profile 的合成配置：
-
-```powershell
-dsh --profile web --dump-config
-```
+重启后，左侧栏底部出现“插件”入口即表示安装成功。
 
 卸载插件：
 
 ```powershell
 dsh plugin --profile web remove dsh-plugin-sidebar-manager
 ```
-
-卸载后同样需要重启 `dsh web`。
 
 ## 运行机制
 
