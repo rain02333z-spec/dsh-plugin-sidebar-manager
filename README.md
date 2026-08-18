@@ -2,6 +2,12 @@
 
 `dsh-plugin-sidebar-manager` 是一个独立安装的 DSH Web 插件。它在左侧栏底部增加“插件”按钮，提供当前 Loader 插件清单、分类搜索和运行时启停。
 
+## 界面预览
+
+<p align="center">
+  <img src="docs/plugin-manager-overview.png" alt="DSH 侧栏插件管理器" width="100%">
+</p>
+
 ## 功能
 
 - 左侧栏展开时显示“插件”和插件总数，收起时显示与“设置 → 插件”一致的图标按钮。
@@ -15,34 +21,61 @@
 - 提供加载中、空列表、搜索无结果、加载失败重试和单项操作失败状态。
 - 支持 Escape、点击面板外部和再次点击入口关闭面板。
 
-## 安装
+## 快速开始
 
-从 GitHub Release 下载并校验安装包：
+### 环境要求
+
+- 已安装 DeepSeek Harness，`dsh web` 可以正常启动。
+- 使用 DSH `0.1.0-rc.5`。
+- 插件必须安装到 `web` profile。
+
+### 从 GitHub Release 安装（推荐）
+
+直接安装当前发布包：
 
 ```powershell
-$package = Join-Path $env:TEMP 'dsh-plugin-sidebar-manager-0.1.1.tgz'
-$checksum = "$package.sha256"
-$release = 'https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager/releases/download/v0.1.1'
-Invoke-WebRequest -Uri "$release/dsh-plugin-sidebar-manager-0.1.1.tgz" -OutFile $package
-Invoke-WebRequest -Uri "$release/dsh-plugin-sidebar-manager-0.1.1.tgz.sha256" -OutFile $checksum
-
-$expected = ((Get-Content $checksum -Raw) -split '\s+')[0].ToUpperInvariant()
-if ((Get-FileHash $package -Algorithm SHA256).Hash -ne $expected) {
-  throw 'Plugin package checksum mismatch.'
-}
-
-dsh plugin --profile web add $package
+dsh plugin --profile web add https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager/releases/download/v0.1.1/dsh-plugin-sidebar-manager-0.1.1.tgz
 ```
 
-从 DSH 源码仓库运行 CLI 时，将最后一行改为 `pnpm dsh plugin --profile web add $package`。安装后重启 `dsh web`，然后刷新 `http://127.0.0.1:3080`。
+从 DSH 源码仓库运行 CLI 时，在命令前加 `pnpm`：
 
-卸载：
+```powershell
+pnpm dsh plugin --profile web add https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager/releases/download/v0.1.1/dsh-plugin-sidebar-manager-0.1.1.tgz
+```
+
+安装完成后停止并重新启动 `dsh web`。只刷新浏览器不会加载新插件。
+
+### 从源码安装（开发调试）
+
+源码使用 DSH monorepo 的构建约定。从 DSH 仓库根目录执行：
+
+```powershell
+git clone https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager.git packages/extensions/plugin-manager
+pnpm install
+pnpm exec tsc -b packages/extensions/plugin-manager/tsconfig.host.json packages/extensions/plugin-manager/tsconfig.client.json
+pnpm --filter dsh-plugin-sidebar-manager bundle
+
+$plugin = Join-Path (Get-Location) 'packages/extensions/plugin-manager'
+dsh plugin --profile web add "link:$plugin"
+```
+
+使用仓库内的 CLI 时，将最后一行改为 `pnpm dsh plugin --profile web add "link:$plugin"`。源码安装只用于开发调试，普通使用请安装 Release 包。
+
+### 验证与卸载
+
+重启后，左侧栏底部出现“插件”入口即表示安装成功。也可以检查 `web` profile 的合成配置：
+
+```powershell
+dsh --profile web --dump-config
+```
+
+卸载插件：
 
 ```powershell
 dsh plugin --profile web remove dsh-plugin-sidebar-manager
 ```
 
-卸载后重启 `dsh web`。
+卸载后同样需要重启 `dsh web`。
 
 ## 运行机制
 
