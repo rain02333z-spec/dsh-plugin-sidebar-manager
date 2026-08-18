@@ -2,7 +2,9 @@
 
 中文 | [English](README.en.md)
 
-`dsh-plugin-sidebar-manager` 是一个独立安装的 DSH Web 插件。它在左侧栏底部增加“插件”按钮，提供当前 Loader 插件清单、分类搜索和运行时启停。
+## 是什么
+
+`dsh-plugin-sidebar-manager` 为 DSH Web UI 左侧栏添加“插件”按钮，将系统自带插件和用户新增插件分类展示，简化插件管理和搜索操作。
 
 ## 界面预览
 

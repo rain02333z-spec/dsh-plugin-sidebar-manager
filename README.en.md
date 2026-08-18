@@ -2,7 +2,9 @@
 
 [中文](README.md) | English
 
-`dsh-plugin-sidebar-manager` is a standalone DSH Web plugin. It adds a Plugins button to the bottom of the sidebar, where you can browse the current Loader inventory, search by plugin, group entries by category, and manage runtime state.
+## What It Is
+
+`dsh-plugin-sidebar-manager` adds a Plugins button to the DSH Web UI sidebar, separates built-in system plugins from user-added plugins, and makes plugin management and search easier.
 
 ## Preview
 
