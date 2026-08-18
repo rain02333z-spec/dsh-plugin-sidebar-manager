@@ -17,13 +17,24 @@
 
 ## 安装
 
-使用本目录生成的安装包：
+从 GitHub Release 下载并校验安装包：
 
 ```powershell
-dsh plugin --profile web add .\dsh-plugin-sidebar-manager-0.1.1.tgz
+$package = Join-Path $env:TEMP 'dsh-plugin-sidebar-manager-0.1.1.tgz'
+$checksum = "$package.sha256"
+$release = 'https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager/releases/download/v0.1.1'
+Invoke-WebRequest -Uri "$release/dsh-plugin-sidebar-manager-0.1.1.tgz" -OutFile $package
+Invoke-WebRequest -Uri "$release/dsh-plugin-sidebar-manager-0.1.1.tgz.sha256" -OutFile $checksum
+
+$expected = ((Get-Content $checksum -Raw) -split '\s+')[0].ToUpperInvariant()
+if ((Get-FileHash $package -Algorithm SHA256).Hash -ne $expected) {
+  throw 'Plugin package checksum mismatch.'
+}
+
+dsh plugin --profile web add $package
 ```
 
-重启 `dsh web`，然后刷新 `http://127.0.0.1:3080`。
+从 DSH 源码仓库运行 CLI 时，将最后一行改为 `pnpm dsh plugin --profile web add $package`。安装后重启 `dsh web`，然后刷新 `http://127.0.0.1:3080`。
 
 卸载：
 
