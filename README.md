@@ -29,23 +29,38 @@
 - 使用 DSH `0.1.0-rc.5`。
 - 插件必须安装到 `web` profile。
 
-### 从 GitHub Release 安装（推荐）
+### 从仓库目录安装（推荐）
 
-直接安装当前发布包：
+仓库内的 `packages/dsh-plugin-sidebar-manager` 已包含预构建代码，可以像 DSH 官方示例中的本地 checkout 一样直接安装：
+
+```powershell
+git clone https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager.git
+Set-Location dsh-plugin-sidebar-manager
+pnpm --dir ./packages/dsh-plugin-sidebar-manager install --prod --no-lockfile --config.auto-install-peers=false
+dsh plugin --profile web add ./packages/dsh-plugin-sidebar-manager
+```
+
+第一条 `pnpm` 命令只安装 checkout 自己的运行依赖；DSH peer dependencies 由宿主提供。之后 `dsh plugin add` 会把这个本地目录以 `link:` 形式写入 `web` profile。
+
+从 DSH 源码仓库运行 CLI 时，先取得插件目录的绝对路径：
+
+```powershell
+$plugin = (Resolve-Path './packages/dsh-plugin-sidebar-manager').Path
+$dshRepo = 'C:\path\to\deepseek-harness'
+pnpm --dir $dshRepo dsh plugin --profile web add $plugin
+```
+
+安装完成后停止并重新启动 `dsh web`。只刷新浏览器不会加载新插件。
+
+### 从 GitHub Release 安装
+
+不需要保留仓库 checkout 时，可以直接安装已发布的 tarball：
 
 ```powershell
 dsh plugin --profile web add https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager/releases/download/v0.1.1/dsh-plugin-sidebar-manager-0.1.1.tgz
 ```
 
-从 DSH 源码仓库运行 CLI 时，在命令前加 `pnpm`：
-
-```powershell
-pnpm dsh plugin --profile web add https://github.com/rain02333z-spec/dsh-plugin-sidebar-manager/releases/download/v0.1.1/dsh-plugin-sidebar-manager-0.1.1.tgz
-```
-
-安装完成后停止并重新启动 `dsh web`。只刷新浏览器不会加载新插件。
-
-### 从源码安装（开发调试）
+### 从源码构建（开发调试）
 
 源码使用 DSH monorepo 的构建约定。从 DSH 仓库根目录执行：
 
@@ -55,11 +70,11 @@ pnpm install
 pnpm exec tsc -b packages/extensions/plugin-manager/tsconfig.host.json packages/extensions/plugin-manager/tsconfig.client.json
 pnpm --filter dsh-plugin-sidebar-manager bundle
 
-$plugin = Join-Path (Get-Location) 'packages/extensions/plugin-manager'
-dsh plugin --profile web add "link:$plugin"
+$plugin = (Resolve-Path 'packages/extensions/plugin-manager').Path
+pnpm dsh plugin --profile web add $plugin
 ```
 
-使用仓库内的 CLI 时，将最后一行改为 `pnpm dsh plugin --profile web add "link:$plugin"`。源码安装只用于开发调试，普通使用请安装 Release 包。
+profile 会链接这个源码 checkout。修改代码后重新执行类型构建和 bundle，再重启 `dsh web`。
 
 ### 验证与卸载
 

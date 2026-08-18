@@ -2,3 +2,9 @@ node_modules/
 lib/
 *.tsbuildinfo
 *.tgz
+
+# Prebuilt checkout package for `dsh plugin add ./packages/...`.
+!packages/
+!packages/dsh-plugin-sidebar-manager/
+!packages/dsh-plugin-sidebar-manager/lib/
+!packages/dsh-plugin-sidebar-manager/lib/**
